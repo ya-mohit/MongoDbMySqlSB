@@ -1,4 +1,4 @@
-package com.mohit.MongoDbMySqlSB.databaseconfig;
+package com.mohit.MongoDbMySqlSB;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

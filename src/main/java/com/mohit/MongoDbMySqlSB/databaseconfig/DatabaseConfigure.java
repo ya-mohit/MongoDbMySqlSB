@@ -1,4 +1,4 @@
-package com.mohit.MongoDbMySqlSB;
+package com.mohit.MongoDbMySqlSB.databaseconfig;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 
+import com.mongodb.ConnectionString;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -25,25 +26,24 @@ public class DatabaseConfigure {
 	}
 	
 	@Bean
-	MongoClient mongoClient() throws NamingException{
+	public MongoClient mongoClient() throws NamingException {
 		Context context = (Context) new InitialContext().lookup("java:comp/env");
-		String connectionString = (String) context.lookup("MONGODB_URI");
-		
-		MongoClient mongoClient = MongoClients.create(connectionString);
-		return mongoClient;
+		String uri = (String) context.lookup("MONGODB_URI");				//To be matched in server.xml
+		ConnectionString connectionString = new ConnectionString(uri);
+		MongoClient client = MongoClients.create(connectionString);
+		return client;
 	}
 
 	@Bean
-	MongoTemplate mongoTemplate(MongoClient mongoClient) {
-		return new MongoTemplate(mongoClient, "springBoot");		//Database Name
+	public MongoTemplate mongoTemplate(MongoClient mongoClient) {
+		return new MongoTemplate(mongoClient, "springBoot"); // Specify your database name here
 	}
 
 //For MongoDB ->
 	//server.xml :
 		//<Environment name="MONGODB_URI" override="false" type="java.lang.String" 
 		//value="mongodb+srv://USER:PASSWORD@cluster0.tsoxa.mongodb.net/DATABASENAME?retryWrites=true&amp;w=majority&amp;appName=CLUSTERNAME"/>
-		
-	
+
 //For MySql ->
 	//Add below property in context.xml
 	//<ResourceLink name="Media" global="Media" type="javax.sql.DataSource" />
